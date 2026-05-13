@@ -28,7 +28,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "logo_data.h"
 
 /* ─────────────────────────────────────────────
    Configuration
@@ -771,15 +770,32 @@ static void on_show_terms(GSimpleAction *action, GVariant *param, gpointer app) 
    ───────────────────────────────────────────── */
 static GtkWidget *build_headerbar(void) {
     GtkWidget *hb = gtk_header_bar_new();
+    
+    /* On active les boutons de fenêtre (fermer, etc.) */
     gtk_header_bar_set_show_title_buttons(GTK_HEADER_BAR(hb), TRUE);
 
+    /* * ASTUCE : Pour enlever l'icône de l'app à gauche du header, 
+     * on peut forcer un margin négatif ou cacher l'élément via CSS.
+     */
+    GtkCssProvider *header_css = gtk_css_provider_new();
+    gtk_css_provider_load_from_string(header_css, 
+        "headerbar windowhandle > box > image { display: none; margin: 0; padding: 0; }"
+        "headerbar > box.start { margin-left: 0; padding-left: 0; }"
+    );
+    gtk_style_context_add_provider(gtk_widget_get_style_context(hb),
+        GTK_STYLE_PROVIDER(header_css), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    g_object_unref(header_css);
+
+    /* Titre centré */
     GtkWidget *title_lbl = gtk_label_new("Ardoise COBOL IDE");
+    gtk_widget_add_css_class(title_lbl, "title");
     gtk_header_bar_set_title_widget(GTK_HEADER_BAR(hb), title_lbl);
 
     /* ── Côté gauche : outils fichier ── */
     GtkWidget *lbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    gtk_box_set_spacing(GTK_BOX(lbox), 0);
-
+    // On enlève tout padding à gauche de la box pour coller au bord
+    gtk_widget_set_margin_start(lbox, 0); 
+    
     GtkWidget *new_btn = gtk_button_new_with_label("New");
     gtk_widget_add_css_class(new_btn, "toolbar-btn");
     gtk_widget_set_tooltip_text(new_btn, "New COBOL File");
@@ -812,7 +828,7 @@ static GtkWidget *build_headerbar(void) {
 
     gtk_header_bar_pack_end(GTK_HEADER_BAR(hb), run_box);
 
-        /* ── Menu Settings (☰) ── */
+    /* ── Menu Settings (☰) ── */
     GMenu *menu = g_menu_new();
     g_menu_append(menu, "Credits", "app.credits");
     g_menu_append(menu, "Terms & Conditions", "app.terms");
@@ -820,6 +836,7 @@ static GtkWidget *build_headerbar(void) {
     GtkWidget *menu_btn = gtk_menu_button_new();
     gtk_menu_button_set_icon_name(GTK_MENU_BUTTON(menu_btn), "open-menu-symbolic");
     gtk_menu_button_set_menu_model(GTK_MENU_BUTTON(menu_btn), G_MENU_MODEL(menu));
+    gtk_widget_add_css_class(menu_btn, "toolbar-btn");
 
     gtk_header_bar_pack_end(GTK_HEADER_BAR(hb), menu_btn);
 
@@ -852,11 +869,9 @@ static void on_activate(GApplication *gapp, gpointer ud) {
     
     // On définit l'icône par défaut pour toutes les fenêtres de l'app
     // à partir de la ressource "/logo.png" compilée.
-    gtk_window_set_default_icon_name("ardoise-cobol-ide");
     
     // Application de l'icône à la fenêtre actuelle
     // Note: Utilise le nom déclaré dans le fichier .desktop ou les ressources
-    gtk_window_set_icon_name(GTK_WINDOW(G.window), "ardoise-cobol-ide");
 
     /* ── Header (Sans logo ajouté) ── */
     gtk_window_set_titlebar(GTK_WINDOW(G.window), build_headerbar());
