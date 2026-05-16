@@ -11,10 +11,10 @@ Other requirement: GnuCobol
 
 &ensp;
 
-Compile command for Linux:
+Compile command for Linux(Debian):
 
 ```bash
-gcc cwse_ide.c cwse.c resources.c -o cwse_studio $(pkg-config --cflags --libs gtk4 vte-2.91-gtk4) -lncurses
-
+sudo chmod +x build.sh
+./build.sh
 ```
 
