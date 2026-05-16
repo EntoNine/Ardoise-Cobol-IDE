@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Ardoise COBOL IDE
+GenericName=COBOL Editor
+Comment=IDE hybride GTK4 pour l'édition de fichiers COBOL
+Exec=/usr/bin/cwse_studio
+Icon=ardoise-cobol-ide
+Terminal=false
+Categories=Development;IDE;TextEditor;
+Keywords=cobol;editor;ide;programmation;
+StartupWMClass=cwse_studio
+StartupNotify=true

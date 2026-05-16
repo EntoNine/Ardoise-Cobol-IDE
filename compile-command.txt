@@ -1,1 +1,0 @@
-gcc cwse_ide.c cwse.c resources.c -o cwse_studio $(pkg-config --cflags --libs gtk4 vte-2.91-gtk4) -lncurses

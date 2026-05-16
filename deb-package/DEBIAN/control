@@ -1,0 +1,25 @@
+Package: ardoise-cobol-ide
+Version: 1.0.0
+Section: devel
+Priority: optional
+Architecture: amd64
+Depends: libgtk-4-1 (>= 4.0), libvte-2.91-gtk4-0, libncurses6, gnucobol
+Recommends: gnucobol
+Maintainer: Ento9 <ento9@example.com>
+Description: Ardoise COBOL IDE — Hybrid GTK4 COBOL Editor
+ A lightweight hybrid IDE for editing and running COBOL programs.
+ Combines a GTK4 graphical interface with an embedded ncurses-based
+ editor (CWSE) running inside a VTE terminal.
+ .
+ Features:
+  - Sidebar file browser with folder navigation
+  - Integrated VTE terminal with Catppuccin Mocha theme
+  - One-click COBOL file creation and editing
+  - Automatic CWSE engine embedding (no external binary needed)
+  - Keyboard-first ncurses editor for maximum efficiency
+ .
+ Required dependencies (auto-installed):
+  - GTK 4 runtime (libgtk-4-1)
+  - VTE terminal widget for GTK4 (libvte-2.91-gtk4-0)
+  - ncurses terminal library (libncurses6)
+  - GnuCOBOL compiler (gnucobol)

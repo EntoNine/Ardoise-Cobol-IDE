@@ -1,0 +1,46 @@
+#!/bin/sh
+set -e
+
+echo "━━━ Ardoise COBOL IDE — Post-install ━━━━━━━━━━━━━━━━━━"
+
+# ── Vérifier et installer les dépendances manquantes ─────────
+MISSING=""
+
+check_pkg() {
+    dpkg -s "$1" >/dev/null 2>&1 || MISSING="$MISSING $1"
+}
+
+check_pkg libgtk-4-1
+check_pkg libvte-2.91-gtk4-0
+check_pkg libncurses6
+check_pkg gnucobol
+
+if [ -n "$MISSING" ]; then
+    echo "  Installing missing dependencies:$MISSING"
+    if command -v apt-get >/dev/null 2>&1; then
+        apt-get install -y $MISSING
+        echo "  ✔  Dependencies installed."
+    else
+        echo "  ⚠  apt-get not found. Please install manually:$MISSING"
+    fi
+else
+    echo "  ✔  All dependencies are already installed."
+fi
+
+# ── Mettre à jour le cache d'icônes GTK ──────────────────────
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+    gtk-update-icon-cache -f -t /usr/share/icons/hicolor
+    echo "  ✔  Icon cache updated."
+fi
+
+# ── Mettre à jour la base de données des applications ────────
+if command -v update-desktop-database >/dev/null 2>&1; then
+    update-desktop-database /usr/share/applications
+    echo "  ✔  Desktop database updated."
+fi
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Ardoise COBOL IDE installed successfully."
+echo "  Launch from your application menu or run: cwse_studio"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+exit 0
